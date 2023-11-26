@@ -1,0 +1,18 @@
+{
+  "key": "plugin_localazy_content-transfer-setup",
+  "value": {
+    "has_setup": true,
+    "setup": [
+      {
+        "notes": {
+          "__model__": true,
+          "content": true,
+          "title": true
+        }
+      }
+    ]
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

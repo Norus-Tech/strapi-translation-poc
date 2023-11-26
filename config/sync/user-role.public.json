@@ -1,0 +1,58 @@
+{
+  "name": "Public",
+  "description": "Default role given to unauthenticated user.",
+  "type": "public",
+  "permissions": [
+    {
+      "action": "api::note.note.create"
+    },
+    {
+      "action": "api::note.note.delete"
+    },
+    {
+      "action": "api::note.note.find"
+    },
+    {
+      "action": "api::note.note.findOne"
+    },
+    {
+      "action": "api::note.note.update"
+    },
+    {
+      "action": "plugin::localazy.localazyTransferController.download"
+    },
+    {
+      "action": "plugin::localazy.localazyTransferController.upload"
+    },
+    {
+      "action": "plugin::localazy.localazyUserController.getUserPublic"
+    },
+    {
+      "action": "plugin::localazy.strapiController.getLocalizableModels"
+    },
+    {
+      "action": "plugin::localazy.strapiController.getModels"
+    },
+    {
+      "action": "plugin::users-permissions.auth.callback"
+    },
+    {
+      "action": "plugin::users-permissions.auth.connect"
+    },
+    {
+      "action": "plugin::users-permissions.auth.emailConfirmation"
+    },
+    {
+      "action": "plugin::users-permissions.auth.forgotPassword"
+    },
+    {
+      "action": "plugin::users-permissions.auth.register"
+    },
+    {
+      "action": "plugin::users-permissions.auth.resetPassword"
+    },
+    {
+      "action": "plugin::users-permissions.auth.sendEmailConfirmation"
+    }
+  ]
+}

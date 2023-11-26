@@ -1,0 +1,20 @@
+{
+  "key": "plugin_localazy_identity",
+  "value": {
+    "user": {
+      "id": "_a7589800568177420770",
+      "name": "Tashyn Wallace"
+    },
+    "scope": "write_project",
+    "project": {
+      "id": "_a7589800339271741873",
+      "url": "https://localazy.com/p/voiceless-provision-demo",
+      "name": "Voiceless Provision (demo)",
+      "image": ""
+    },
+    "accessToken": "17588648057726952331474491b4ea1ab191b16e6013269a880e03e119a1c755988813dcdc1d7d2f923e"
+  },
+  "type": "object",
+  "environment": null,
+  "tag": null
+}

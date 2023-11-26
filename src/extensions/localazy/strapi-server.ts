@@ -1,11 +1,27 @@
 module.exports = (plugin) => {
-  console.dir(plugin.controllers.localazyTransferController.download);
+  plugin.controllers.localazyUserController["getUserPublic"] = async (ctx) => {
+    const user = await strapi
+      .plugin("localazy")
+      .service("localazyUserService")
+      .getUser();
+
+    ctx.body = {
+      project: user.project,
+    };
+  };
+
+  plugin.routes["content-api"].routes.push({
+    method: "GET",
+    path: "/getUser",
+    handler: "localazyUserController.getUserPublic",
+  });
 
   plugin.routes["content-api"].routes.push({
     method: "POST",
     path: "/download",
     handler: "localazyTransferController.download",
   });
+
   plugin.routes["content-api"].routes.push({
     method: "POST",
     path: "/upload",
