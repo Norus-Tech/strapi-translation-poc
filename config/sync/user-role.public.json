@@ -4,6 +4,9 @@
   "type": "public",
   "permissions": [
     {
+      "action": "api::localazy.localazy.checkTranslationStatus"
+    },
+    {
       "action": "api::note.note.create"
     },
     {
