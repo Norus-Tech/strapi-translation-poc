@@ -4,6 +4,9 @@
   "type": "public",
   "permissions": [
     {
+      "action": "api::localazy.localazy.checkSyncStatus"
+    },
+    {
       "action": "api::localazy.localazy.checkTranslationStatus"
     },
     {
@@ -20,6 +23,9 @@
     },
     {
       "action": "api::note.note.update"
+    },
+    {
+      "action": "api::translation-sync.translation-sync.seedSync"
     },
     {
       "action": "plugin::localazy.localazyTransferController.download"

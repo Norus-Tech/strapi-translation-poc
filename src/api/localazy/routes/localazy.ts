@@ -9,5 +9,14 @@ export default {
         middlewares: [],
       },
     },
+    {
+      method: "GET",
+      path: "/localazy/sync-status",
+      handler: "localazy.checkSyncStatus",
+      config: {
+        policies: [],
+        middlewares: [],
+      },
+    },
   ],
 };

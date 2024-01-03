@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "translation_syncs",
+  "info": {
+    "singularName": "translation-sync",
+    "pluralName": "translation-syncs",
+    "displayName": "TranslationSync",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "keyId": {
+      "type": "string",
+      "unique": false
+    },
+    "locale": {
+      "type": "string"
+    },
+    "vid": {
+      "type": "string"
+    }
+  }
+}

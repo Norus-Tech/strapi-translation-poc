@@ -76,6 +76,48 @@
       "conditions": []
     },
     {
+      "action": "plugin::content-manager.explorer.create",
+      "subject": "api::translation-sync.translation-sync",
+      "properties": {
+        "fields": [
+          "keyId",
+          "locale",
+          "vid"
+        ]
+      },
+      "conditions": []
+    },
+    {
+      "action": "plugin::content-manager.explorer.delete",
+      "subject": "api::translation-sync.translation-sync",
+      "properties": {},
+      "conditions": []
+    },
+    {
+      "action": "plugin::content-manager.explorer.read",
+      "subject": "api::translation-sync.translation-sync",
+      "properties": {
+        "fields": [
+          "keyId",
+          "locale",
+          "vid"
+        ]
+      },
+      "conditions": []
+    },
+    {
+      "action": "plugin::content-manager.explorer.update",
+      "subject": "api::translation-sync.translation-sync",
+      "properties": {
+        "fields": [
+          "keyId",
+          "locale",
+          "vid"
+        ]
+      },
+      "conditions": []
+    },
+    {
       "action": "admin::api-tokens.access",
       "subject": null,
       "properties": {},
