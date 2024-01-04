@@ -31,6 +31,9 @@
       "action": "plugin::localazy.localazyTransferController.download"
     },
     {
+      "action": "plugin::localazy.localazyTransferController.downloadAsync"
+    },
+    {
       "action": "plugin::localazy.localazyTransferController.upload"
     },
     {

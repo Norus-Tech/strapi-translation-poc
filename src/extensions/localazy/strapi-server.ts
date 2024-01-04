@@ -10,6 +10,23 @@ module.exports = (plugin) => {
     };
   };
 
+  plugin.controllers.localazyTransferController["downloadAsync"] = async (
+    ctx
+  ) => {
+    try {
+      await strapi
+        .plugin("localazy")
+        .service("localazyTransferDownloadService")
+        .downloadAsync(ctx);
+
+      ctx.body = "Translations successfully downloaded";
+    } catch (err) {
+      console.error(err);
+      ctx.status = 500;
+      ctx.body = err;
+    }
+  };
+
   plugin.routes["content-api"].routes.push({
     method: "GET",
     path: "/getUser",
@@ -19,7 +36,7 @@ module.exports = (plugin) => {
   plugin.routes["content-api"].routes.push({
     method: "POST",
     path: "/download",
-    handler: "localazyTransferController.download",
+    handler: "localazyTransferController.downloadAsync",
   });
 
   plugin.routes["content-api"].routes.push({

@@ -23,7 +23,6 @@ export default () => ({
       const project = localazyProjects.find(
         (localazyProject) => localazyProject.id == localazyUser.project.id
       );
-      console.dir(project);
       const missingTranslations = {};
 
       for (const language of project.languages) {
