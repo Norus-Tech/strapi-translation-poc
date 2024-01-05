@@ -2,6 +2,8 @@
  * localazy service
  */
 import axios from "axios";
+import translate from "translate-google";
+import { delay, getLocalazyApi } from "../functions/functions";
 
 export default () => ({
   async translationsNeeded() {
@@ -118,6 +120,81 @@ export default () => ({
     } catch (err) {
       console.error(err);
       throw err;
+    }
+  },
+  async customUpload(files, config = {}, plugin) {
+    let ret: any = {
+      success: false,
+      message: "No data was uploaded",
+    };
+
+    try {
+      const user = await strapi
+        .plugin("localazy")
+        .service("localazyUserService")
+        .getUser();
+
+      const { data: localazyProjects } = await axios.get(
+        `https://api.localazy.com/projects?languages=true`,
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${user.accessToken}`,
+          },
+        }
+      );
+
+      const project = localazyProjects.find(
+        (localazyProject) => localazyProject.id == user.project.id
+      );
+
+      for (let file of files) {
+        const LocalazyApi = await getLocalazyApi(
+          user,
+          plugin.config.LOCALAZY_PUBLIC_API_URL
+        );
+
+        // replace .en | "en" with the default language!
+        for (const key of Object.keys(file[0].content.en)) {
+          for (const language of project.languages) {
+            //translate ${key} to ${language.code}
+            if (language.code == "en") continue;
+            let translatedText = "UNSUPPORTED_TRANS";
+            try {
+              translatedText = await translate(file[0].content.en[key], {
+                from: "en",
+                to: language.code,
+              });
+            } catch (err) {}
+
+            if (file[0]?.content[language?.code]) {
+              file[0].content[language.code][key] = translatedText;
+            } else {
+              file[0].content[language.code] = {
+                [key]: translatedText,
+              };
+            }
+          }
+        }
+
+        const result = await LocalazyApi.import({
+          projectId: user.project.id,
+          files: file,
+          ...config,
+        });
+        await delay();
+        ret = {
+          success: true,
+          result: result.result,
+        };
+      }
+      return ret;
+    } catch (e) {
+      strapi.log.error(e);
+      return {
+        success: false,
+        message: e.message,
+      };
     }
   },
 });

@@ -27,6 +27,65 @@ module.exports = (plugin) => {
     }
   };
 
+  plugin.services.localazyUploadService = ({ strapi }) => ({
+    async upload(files, config = {}) {
+      return await strapi
+        .service("api::localazy.localazy")
+        .customUpload(files, config, plugin);
+    },
+
+    CHUNK_LIMIT: plugin.config.LOCALAZY_PUBLIC_API_LIFTED_LIMITS ? 99900 : 9990,
+
+    splitToChunks(data, CHUNK_LIMIT = null) {
+      const chunks = [];
+      const keys = Object.keys(data);
+      const keysCount = keys.length;
+      const localChunkLimit = CHUNK_LIMIT || this.CHUNK_LIMIT;
+      const chunksCount = Math.ceil(keysCount / localChunkLimit);
+      for (let i = 0; i < chunksCount; i += 1) {
+        const chunkStrings = {};
+        const from = localChunkLimit * i;
+        const to = localChunkLimit * (i + 1);
+
+        const currentKeys = keys.slice(from, to);
+        currentKeys.forEach((key) => {
+          chunkStrings[key] = data[key];
+        });
+        chunks.push(chunkStrings);
+      }
+
+      return chunks;
+    },
+
+    createImportFileRepresentation(
+      filename,
+      path,
+      type,
+      sourceLang,
+      stringsChunks
+    ) {
+      const files = [];
+
+      for (const strings of stringsChunks) {
+        const file = [
+          {
+            name: filename,
+            path,
+            content: {
+              type,
+              [sourceLang]: {
+                ...strings,
+              },
+            },
+          },
+        ];
+        files.push(file);
+      }
+
+      return files;
+    },
+  });
+
   plugin.routes["content-api"].routes.push({
     method: "GET",
     path: "/getUser",
