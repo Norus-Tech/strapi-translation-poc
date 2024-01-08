@@ -4,162 +4,165 @@
 // import { errors } from "@strapi/utils";
 // import crypto from "crypto";
 // const { ApplicationError, ValidationError } = errors;
-// export default {
-//   async findAllUsers(ctx) {
-//     try {
-//       const queries = ctx.query;
-//       const users = await strapi.db
-//         .query("plugin::users-permissions.user")
-//         .findMany({ populate: ["role"], where: queries });
+export default {
+  //   async findAllUsers(ctx) {
+  //     try {
+  //       const queries = ctx.query;
+  //       const users = await strapi.db
+  //         .query("plugin::users-permissions.user")
+  //         .findMany({ populate: ["role"], where: queries });
 
-//       const sanitizeUserData = await removeSensitiveData(
-//         users,
-//         "plugin::users-permissions.user",
-//         ctx
-//       );
+  //       const sanitizeUserData = await removeSensitiveData(
+  //         users,
+  //         "plugin::users-permissions.user",
+  //         ctx
+  //       );
 
-//       return sanitizeUserData;
-//     } catch (err) {
-//       ctx.response.badRequest(err?.message, err?.data);
-//     }
-//   },
-//   async update(ctx) {
-//     try {
-//       const { id } = ctx.params;
+  //       return sanitizeUserData;
+  //     } catch (err) {
+  //       ctx.response.badRequest(err?.message, err?.data);
+  //     }
+  //   },
+  async update(ctx) {
+    try {
+      //   const { id } = ctx.params;
+      console.log("RUNNING");
+      const requestBody = ctx.request.body;
 
-//       const localUser = await strapi.db
-//         .query("plugin::users-permissions.user")
-//         .findOne({
-//           where: { id },
-//           populate: ["role"],
-//         });
+      console.log(requestBody);
 
-//       if (!localUser) {
-//         ctx.status = 404;
-//         throw new Error(`User with id ${id} not found`);
-//       }
-//       const currentUser = ctx.state.user;
+      const localUser = await strapi.db
+        .query("plugin::users-permissions.user")
+        .findOne({
+          where: { pushToken: requestBody?.pushToken },
+        });
 
-//       const { role: currentUserRole } = currentUser;
-//       const updatingToRole = ctx?.request.body?.role;
-//       if (currentUserRole?.type === ROLES.PROGRAM_ADMIN && updatingToRole) {
-//         throw new Error(`Program admin cannot update their role`);
-//       }
+      if (!localUser) {
+        await strapi.db.query("plugin::users-permissions.user").create({
+          data: {
+            ...ctx?.request.body,
+          },
+        });
 
-//       await strapi.db.query("plugin::users-permissions.user").update({
-//         where: {
-//           id,
-//         },
-//         data: {
-//           ...ctx?.request.body,
-//         },
-//       });
+        ctx.body = { success: true };
+        return ctx.response;
+      }
 
-//       ctx.body = { success: true };
-//       return ctx.response;
-//     } catch (err) {
-//       ctx.response.badRequest(err?.message, err?.data);
-//     }
-//   },
-//   async forgotPassword(ctx) {
-//     try {
-//       const params = ctx.request.body;
+      await strapi.db.query("plugin::users-permissions.user").update({
+        where: {
+          id: localUser?.id,
+        },
+        data: {
+          ...ctx?.request.body,
+        },
+      });
 
-//       // Get User based on identifier
-//       const user = await strapi.db
-//         .query("plugin::users-permissions.user")
-//         .findOne({
-//           where: { email: params?.email?.toLowerCase() },
-//         });
-//       const resetPasswordToken = faker.datatype.number({
-//         min: 10000,
-//         max: 99999,
-//         precision: 1,
-//       }); //crypto.randomBytes(64).toString("hex");
-//       if (user && !user?.blocked) {
-//         try {
-//           const redirectUrl = `${params.redirectUrl}/auth/change-password?code=${resetPasswordToken}`;
+      ctx.body = { success: true };
+      return ctx.response;
+    } catch (err) {
+        console.log(err);
+      ctx.response.badRequest(err?.message, err?.data);
+    }
+  },
+  //   async forgotPassword(ctx) {
+  //     try {
+  //       const params = ctx.request.body;
 
-//           // // Send user invation (change password ticket)
-//           await strapi
-//             .service("api::postmark.postmark")
-//             //@ts-ignore
-//             .sendPasswordResetEmail(
-//               redirectUrl,
-//               user,
-//               "password-reset",
-//               "An error occurred while sending reset password email"
-//             );
-//         } catch (error) {
-//           throw new ApplicationError(error?.message);
-//         }
+  //       // Get User based on identifier
+  //       const user = await strapi.db
+  //         .query("plugin::users-permissions.user")
+  //         .findOne({
+  //           where: { email: params?.email?.toLowerCase() },
+  //         });
+  //       const resetPasswordToken = faker.datatype.number({
+  //         min: 10000,
+  //         max: 99999,
+  //         precision: 1,
+  //       }); //crypto.randomBytes(64).toString("hex");
+  //       if (user && !user?.blocked) {
+  //         try {
+  //           const redirectUrl = `${params.redirectUrl}/auth/change-password?code=${resetPasswordToken}`;
 
-//         // Update the user.
-//         await strapi
-//           .query("plugin::users-permissions.user")
-//           .update({ where: { id: user.id }, data: { resetPasswordToken } });
-//       }
-//       ctx.body = { success: true, code: resetPasswordToken };
-//     } catch (err) {
-//       ctx.body = err;
-//     }
-//   },
-//   async requestResetPasswordToken(ctx) {
-//     try {
-//       const { email } = ctx?.request.body;
+  //           // // Send user invation (change password ticket)
+  //           await strapi
+  //             .service("api::postmark.postmark")
+  //             //@ts-ignore
+  //             .sendPasswordResetEmail(
+  //               redirectUrl,
+  //               user,
+  //               "password-reset",
+  //               "An error occurred while sending reset password email"
+  //             );
+  //         } catch (error) {
+  //           throw new ApplicationError(error?.message);
+  //         }
 
-//       const user = await strapi.db
-//         .query("plugin::users-permissions.user")
-//         .findOne({
-//           where: {
-//             email: email?.toLowerCase(),
-//           },
-//           //@ts-ignore
-//           populate: true,
-//         });
+  //         // Update the user.
+  //         await strapi
+  //           .query("plugin::users-permissions.user")
+  //           .update({ where: { id: user.id }, data: { resetPasswordToken } });
+  //       }
+  //       ctx.body = { success: true, code: resetPasswordToken };
+  //     } catch (err) {
+  //       ctx.body = err;
+  //     }
+  //   },
+  //   async requestResetPasswordToken(ctx) {
+  //     try {
+  //       const { email } = ctx?.request.body;
 
-//       if (!user) {
-//         throw new Error("Invalid email address");
-//       }
+  //       const user = await strapi.db
+  //         .query("plugin::users-permissions.user")
+  //         .findOne({
+  //           where: {
+  //             email: email?.toLowerCase(),
+  //           },
+  //           //@ts-ignore
+  //           populate: true,
+  //         });
 
-//       const resetPasswordToken = crypto.randomBytes(64).toString("hex");
+  //       if (!user) {
+  //         throw new Error("Invalid email address");
+  //       }
 
-//       await strapi
-//         .query("plugin::users-permissions.user")
-//         .update({ where: { id: user.id }, data: { resetPasswordToken } });
+  //       const resetPasswordToken = crypto.randomBytes(64).toString("hex");
 
-//       ctx.send({ resetToken: resetPasswordToken, role: user.role.type });
-//     } catch (error) {
-//       ctx.response.badRequest(error?.message, error?.data);
-//     }
-//   },
-//   async delete(ctx) {
-//     try {
-//       const { userID } = ctx.params;
+  //       await strapi
+  //         .query("plugin::users-permissions.user")
+  //         .update({ where: { id: user.id }, data: { resetPasswordToken } });
 
-//       const localUser = await strapi.db
-//         .query("plugin::users-permissions.user")
-//         .findOne({
-//           where: {
-//             id: userID,
-//           },
-//         });
+  //       ctx.send({ resetToken: resetPasswordToken, role: user.role.type });
+  //     } catch (error) {
+  //       ctx.response.badRequest(error?.message, error?.data);
+  //     }
+  //   },
+  //   async delete(ctx) {
+  //     try {
+  //       const { userID } = ctx.params;
 
-//       if (!localUser) {
-//         ctx.status = 404;
-//         throw new Error(`User with id ${userID} not found`);
-//       }
+  //       const localUser = await strapi.db
+  //         .query("plugin::users-permissions.user")
+  //         .findOne({
+  //           where: {
+  //             id: userID,
+  //           },
+  //         });
 
-//       await strapi.db.query("plugin::users-permissions.user").delete({
-//         where: {
-//           id: userID,
-//         },
-//       });
+  //       if (!localUser) {
+  //         ctx.status = 404;
+  //         throw new Error(`User with id ${userID} not found`);
+  //       }
 
-//       ctx.body = { success: true };
-//       return ctx.response;
-//     } catch (err) {
-//       ctx.response.badRequest(err?.message, err?.data);
-//     }
-//   },
-// };
+  //       await strapi.db.query("plugin::users-permissions.user").delete({
+  //         where: {
+  //           id: userID,
+  //         },
+  //       });
+
+  //       ctx.body = { success: true };
+  //       return ctx.response;
+  //     } catch (err) {
+  //       ctx.response.badRequest(err?.message, err?.data);
+  //     }
+  //   },
+};

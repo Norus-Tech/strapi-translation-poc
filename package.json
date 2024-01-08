@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "description": "A Strapi application",
   "scripts": {
-    "develop": "strapi develop",
+    "dev": "strapi develop",
     "start": "strapi start",
     "build": "strapi build",
     "strapi": "strapi",
@@ -23,6 +23,8 @@
     "@strapi/plugin-i18n": "4.7.1",
     "@strapi/plugin-users-permissions": "4.7.1",
     "@strapi/strapi": "4.7.1",
+    "axios": "^1.6.2",
+    "expo-server-sdk": "^3.7.0",
     "pg": "8.8.0",
     "postmark": "^3.0.15",
     "strapi-plugin-config-sync": "^1.1.1",
@@ -35,7 +37,7 @@
     "uuid": "4ec9dd50-7dca-4cef-b17c-e53829b8860d"
   },
   "engines": {
-    "node": "16.x.x",
+    "node": ">=16.x.x",
     "npm": "^6.0.0"
   },
   "license": "MIT",

@@ -17,15 +17,16 @@ export default {
     //   },
     // },
 
-    // {
-    //   method: "PUT",
-    //   path: "/user/:id",
-    //   handler: "users.update",
-    //   config: {
-    //     policies: [],
-    //     middlewares: [],
-    //   },
-    // },
+    {
+      method: "PUT",
+      path: "/user",
+      handler: "users.update",
+      config: {
+        policies: [],
+        middlewares: [],
+        auth: false
+      },
+    },
     // {
     //   method: "POST",
     //   path: "/user/requestPasswordToken",
