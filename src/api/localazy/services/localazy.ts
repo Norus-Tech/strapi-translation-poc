@@ -123,6 +123,8 @@ export default () => ({
     }
   },
   async customUpload(files, config = {}, plugin) {
+    const ctx = strapi.requestContext.get();
+
     let ret: any = {
       success: false,
       message: "No data was uploaded",
@@ -182,7 +184,18 @@ export default () => ({
           files: file,
           ...config,
         });
+
         await delay();
+
+        await strapi
+          .plugin("localazy")
+          .service("localazyTransferDownloadService")
+          .downloadAsync(ctx);
+
+        await strapi
+          .service("api::translation-sync.translation-sync")
+          .seedSyncStatus();
+
         ret = {
           success: true,
           result: result.result,

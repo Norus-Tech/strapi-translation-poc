@@ -13,5 +13,5 @@ export const getLocalazyApi = async (user: any, baseUrl: string) => {
   return api;
 };
 
-export const delay = (ms = 150) =>
+export const delay = (ms = 250) =>
   new Promise((resolve) => setTimeout(resolve, ms));

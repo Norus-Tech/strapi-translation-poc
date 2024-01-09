@@ -8,6 +8,7 @@
     "start": "strapi start",
     "build": "strapi build",
     "strapi": "strapi",
+    "postinstall": "patch-package",
     "test": "jest --forceExit --detectOpenHandles",
     "prepare": "husky install",
     "commit": "cz"
